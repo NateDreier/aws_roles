@@ -1,0 +1,8 @@
+---
+- name: change instance state by tag
+  ec2:
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    state: running
+    instance_ids: "{{ ec2_instance_ids }}"
