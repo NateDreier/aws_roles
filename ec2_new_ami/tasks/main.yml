@@ -1,2 +1,10 @@
 ---
-# tasks file for ec2_new_ami
+- name: Create new AMI
+    ws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    instance_id: "{{ instance_id }}"
+    # use if you wanna delete - state: absent
+    # image_id: "{{ image_id }}"
+    name: super_awesome_new_ami
+    state: present

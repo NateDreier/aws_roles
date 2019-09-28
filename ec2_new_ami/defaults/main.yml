@@ -1,2 +1,3 @@
 ---
-# defaults file for ec2_new_ami
+instance_id: 
+image_id:
