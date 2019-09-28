@@ -6,5 +6,20 @@
     instance_id: "{{ instance_id }}"
     # use if you wanna delete - state: absent
     # image_id: "{{ image_id }}"
-    name: super_awesome_new_ami
+    name: "{{ new_ami }}"
     state: present
+
+# Use the below task if you have multiple regions that you are deploying
+# various AMI's to.
+
+# - name: Copy new AMI to different region.
+#   ec2_ami_copy:
+#     source_region: "{{ AWS_REGION }}"
+#     region: destination_region
+#     source_image: "{{ new_ami }}"
+#     tags:
+#       Name: Latest
+#       Patch: 6.9
+#     tag_equality: yes
+#     encrypted: yes
+  
