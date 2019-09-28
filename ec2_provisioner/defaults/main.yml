@@ -1,0 +1,12 @@
+---
+rhel8: ami-0c322300a1dd5dc79
+
+nano: t2.nano
+micro: t2.micro
+small: t2.small
+medium: t2.medium
+large: t2.large
+xlarge: t2.xlarge
+2xlarge: t2.2xlarge
+
+subnet_id: subnet-395d6017
