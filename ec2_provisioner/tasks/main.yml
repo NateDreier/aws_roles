@@ -12,4 +12,6 @@
     exact_count: 2
     count_tag:
       Name: test
+    group_name:
+      Name: test
     key_name: ansible

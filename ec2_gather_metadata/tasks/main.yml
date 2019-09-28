@@ -1,0 +1,10 @@
+---
+- name: Wait for SSH to come up
+  wait_for_connection:
+    delay: 5
+  timeout: 30
+
+- name: Collect instance facts
+  ec2_metadata_facts:
+  register: ec2_meta_facts
+
