@@ -1,0 +1,16 @@
+---
+- name: Get AMI facts
+  ec2_ami_facts:
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    # filters:
+    #   description: "*redhat*"
+    register: ami_facts
+
+- name: Output information
+  debug:
+    msg: "{{ item.description }}"
+  loop_control:
+    label: "{{ item.image_id }}"
+  loop: "{{ ami_facts.images }}"
