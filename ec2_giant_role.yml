@@ -1,0 +1,116 @@
+---
+- hosts: localhost
+  gather_facts: true
+  vars_files: 
+    - ../keys.yml
+    - ../vars.yml
+
+  tasks:
+    - name: Create EVS volume
+      ec2_vol:
+        aws_access_key: "{{ AWS_ACCESS_KEY }}"
+        aws_secret_key: "{{ AWS_SECRET_KEY }}"
+        region: "{{ AWS_REGION }}"
+        zone: "{{ AWS_ZONE }}"
+        volume_size: "1"
+        device_name: "{{ device_location }}"
+      register: vol_info
+
+    - name: Create AWS key pair
+      ec2_key:
+        aws_access_key: "{{ AWS_ACCESS_KEY }}"
+        aws_secret_key: "{{ AWS_SECRET_KEY }}"
+        region: "{{ AWS_REGION }}"
+        name: ansible
+    
+    - name: Provision instance
+      ec2: 
+        aws_access_key: "{{ AWS_ACCESS_KEY }}"
+        aws_secret_key: "{{ AWS_SECRET_KEY }}"
+        region: "{{ AWS_REGION }}"
+        zone: "{{ AWS_ZONE }}"
+        instance_type: "{{ micro }}"
+        keypair: ansible
+        image: "{{ rhel8 }}"
+        assign_public_ip: yes
+        vpc_subnet_id: "{{ vpc_subnet }}"
+        wait: true
+        count: true
+        group: "{{ sec_group }}"
+        instance_tags:
+          Name: testy
+          image: yes 
+      register: ec2
+
+    - name: Attach volume
+      ec2_vol:
+        aws_access_key: "{{ AWS_ACCESS_KEY }}"
+        aws_secret_key: "{{ AWS_SECRET_KEY }}"
+        region: "{{ AWS_REGION }}"
+        instance: "{{ec2.instances[0].id }}"
+        id: "{{ vol_info.volume_id }}"
+        device_name: "{{ device_location }}"
+        delete_on_termination: no
+
+    - name: add host to inventory
+      add_host:
+        hostname: '{{ item.public_ip }}'
+        groupname: image_build
+        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+      loop: "{{ ec2.instances }}"
+
+- hosts: image_build
+  gather_facts: false
+  remote_user: ec2-user
+  tasks:
+    - name: Wait for ssh
+      wait_for_connection:
+        delay: 10
+        timeout: 90
+
+    - name: Create new partition
+      become: yes
+      parted:
+        device: /dev/xvdf
+        number: 1
+        state: present
+      register: parted_output
+
+    - name: Format new partition
+      become: yes
+      filesystem:
+        fstype: ext4
+        dev: /dev/xvdf1
+
+# Here is where you could potentially define what you want on your ami,
+# what packages etc.
+    - name: Collect base ansible facts
+      setup:
+
+    - name:
+      ec2_metadata_facts:
+
+- hosts: localhost
+  gather_facts: yes
+  vars_files:
+    - ../keys.yml
+    - ../vars.yml
+
+  tasks:
+    - name: Stop instance for AMI creation
+      ec2:
+        aws_access_key: "{{ AWS_ACCESS_KEY }}"
+        aws_secret_key: "{{ AWS_SECRET_KEY }}"
+        region: "{{ AWS_REGION }}"
+        instance_id: "{{ hostvars[groups['image_build'][0]]['ansible_ec2_instance_id'] }}"
+        state: stopped
+        wait: yes
+
+    - name: Create AMI
+      ec2_ami:
+        aws_access_key: "{{ AWS_ACCESS_KEY }}"
+        aws_secret_key: "{{ AWS_SECRET_KEY }}"
+        region: "{{ AWS_REGION }}"
+        instance_id: "{{ hostvars[groups['image_build'][0]]['ansible_ec2_instance_id'] }}"
+        name: nates_rhel
+        state: present
