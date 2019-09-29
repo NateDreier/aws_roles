@@ -1,0 +1,23 @@
+---
+- name: Create Security group
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    name: "{{ security_goup_name }}"
+    description: "{{ sg_description }}"
+    vpc_id: "{{ subnet_id }}"
+    rules:
+      - proto: "{{ inbound_protocol0 }}"
+        ports: "{{ inbound_ports0 }}"
+        cidr_ip: "{{ inbound_allowed_addresses0 }}"
+      - proto: "{{ inbound_protocol1 }}"
+        ports: "{{ inbound_ports1 }}"
+        cidr_ip: "{{ inbound_allowed_addresses1 }}"
+    rules_egress:
+      - proto: "{{ outbound_protocol0 }}"
+        from_port: "{{ outbound_ports0 }}"
+        cidr_ip: "{{ outbound_allowed_addresses0 }}"
+      - proto: "{{ outbound_protocol1 }}"
+        from_port: "{{ outbound_ports1 }}"
+        cidr_ip: "{{ outbound_allowed_addresses1 }}"
+        
