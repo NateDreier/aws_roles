@@ -1,0 +1,23 @@
+---
+- name: Gather tag info
+  ec2_tag:
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    state: list
+    resource: "{{ instance_id }}"
+  register: tags
+
+- name: Display tags
+  debug:
+    var: tags.tags
+  
+- name: Add tags to resource
+  ec2_tag:
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    resource: "{{ item_u_wnt_2_tag }}"
+    tags:
+      version: 6.9
+    state: present
