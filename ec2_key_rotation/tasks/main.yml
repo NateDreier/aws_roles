@@ -1,0 +1,22 @@
+---
+- name: Remove old key
+  ec2_key:
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    name: ansible
+    state: absent
+
+- name: Create new keypair
+  ec2_key:
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    name: ansible
+    
+- name: Write new private key locally
+  lineinfile:
+    create: yes
+    path: ~/.ssh/ansible.pem
+    line: "{{ keypair.key.private_key }}"
+    mode: 0600
