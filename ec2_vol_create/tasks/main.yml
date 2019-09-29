@@ -1,0 +1,11 @@
+---
+- name: Create new EBS volume
+  ec2_vol: 
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    zone: "{{ AWS_ZONE }}"
+    volume_size: "1"
+    name: p_fancy_volume
+    device_name: /dev/xvdf
+  register: vol_info
