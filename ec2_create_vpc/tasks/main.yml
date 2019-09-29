@@ -1,0 +1,11 @@
+---
+- name:
+  ec2_vpc_net:
+    aws_access_key: "{{ AWS_ACCESS_KEY }}"
+    aws_secret_key: "{{ AWS_SECRET_KEY }}"
+    region: "{{ AWS_REGION }}"
+    name: "{{ vpc_name }}"
+    cidr_block: "{{ cidr }}"
+    tags: 
+      - my: tag
+    tenancy: dedicated
