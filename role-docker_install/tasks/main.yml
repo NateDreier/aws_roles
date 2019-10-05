@@ -1,0 +1,39 @@
+---
+- name: update
+  yum:
+    name: '*'
+    state: present
+
+- name: Remove old versions
+  yum:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ old_items }}"
+
+- name: install pre docker
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ docker_pre }}"
+
+- name: install repo
+  yum_repository:
+    name: docker
+    description: Docker repository
+    baseurl: "{{ docker_repo }}"
+
+- name: install docker
+  yum:
+    name: docker-ce
+    state: present
+
+- name: start
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: add user to docker group
+  user:
+    name: "{{ docker_user }}"
+    group: docker

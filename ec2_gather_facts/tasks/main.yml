@@ -15,10 +15,10 @@
     msg: "IP address: {{ item.public_ip }}"
   loop: "{{ ec2.instance }}"
 
-- name: add host to inventory
-  add_host:
-    hostname: "{{item.public_ip }}"
-    groupname: test
-    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
-    ansible-ssh_private_key_file: ~/.ssh/ansible.pem
-  loop: "{{ ec2.instance }}"
+# - name: add host to inventory
+#   add_host:
+#     hostname: "{{item.public_ip }}"
+#     groupname: test
+#     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+#     ansible-ssh_private_key_file: ~/.ssh/ansible.pem
+#   loop: "{{ ec2.instance }}"
