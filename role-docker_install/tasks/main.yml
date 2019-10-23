@@ -18,9 +18,18 @@
 
 - name: install repo
   yum_repository:
-    name: docker
-    description: Docker repository
+    name: "{{ docker_repo_file_name }}"
+    description: "{{ docker_repo_description }}"
     baseurl: "{{ docker_repo }}"
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: "{{ gpg_key_url }}"
+  become: true
+
+- name: update
+  yum: 
+    name: '*'
+    state: present
 
 - name: install docker
   yum:

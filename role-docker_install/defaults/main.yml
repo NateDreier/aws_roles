@@ -15,6 +15,14 @@ docker_pre:
   - device-mapper-persistent-data
   - lvm2
 
+docker_repo_description: "Docker CE stable - $basearch"
+
+gpg_key_url: "https://download.docker.com/linux/centos/gpg"
+
 docker_repo: "https://download.docker.com/linux/centos/docker-ce.repo"
 
-docker_user: ec2-user
+docker_repo_file_name: docker-ce
+docker_user: 
+  - nate
+
+
