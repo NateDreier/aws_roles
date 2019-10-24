@@ -19,10 +19,10 @@ docker_repo_description: "Docker CE stable - $basearch"
 
 gpg_key_url: "https://download.docker.com/linux/centos/gpg"
 
-docker_repo: "https://download.docker.com/linux/centos/docker-ce.repo"
+docker_repo: "https://download.docker.com/linux/centos/7/$basearch/stable"
 
 docker_repo_file_name: docker-ce
-docker_user: 
-  - nate
+
+docker_user: "nate"
 
 

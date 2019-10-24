@@ -35,14 +35,17 @@
   yum:
     name: docker-ce
     state: present
+  become: yes
 
 - name: start
   systemd:
     name: docker
     state: started
     enabled: yes
+  become: yes
 
 - name: add user to docker group
   user:
     name: "{{ docker_user }}"
     group: docker
+  become: yes
